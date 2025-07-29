@@ -734,6 +734,7 @@ section,
   margin-top: -2px;
   border-left: 2px solid var(--accent-color);
   position: relative;
+  font-feature-settings: "lnum", "tnum";
 }
 
 .resume .resume-item h4 {
