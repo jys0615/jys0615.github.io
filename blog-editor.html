@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Blog Editor - Yoonsuh Jung</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- Editor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css" rel="stylesheet">
+
+  <style>
+    .editor-container {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-section {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .auth-section h2 {
+      margin-bottom: 30px;
+      color: #050d18;
+    }
+
+    .github-login-btn {
+      background: #24292e;
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .github-login-btn:hover {
+      background: #0d1117;
+    }
+
+    .github-login-btn i {
+      margin-right: 10px;
+    }
+
+    .user-info {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .user-details {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      color: #050d18;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .tag-input-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      min-height: 45px;
+    }
+
+    .tag-item {
+      background: #149ddd;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+    }
+
+    .tag-item .remove-tag {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tag-input-field {
+      border: none;
+      outline: none;
+      flex: 1;
+      min-width: 120px;
+      padding: 5px;
+    }
+
+    .publish-btn {
+      background: #149ddd;
+      color: white;
+      padding: 12px 40px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .publish-btn:hover {
+      background: #0d7ab8;
+    }
+
+    .publish-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .status-message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .status-message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .post-list {
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 2px solid #e0e0e0;
+    }
+
+    .post-item {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .post-item-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .edit-btn, .delete-btn {
+      padding: 6px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .edit-btn {
+      background: #149ddd;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="editor-container">
+
+      <!-- Authentication Section -->
+      <div id="authSection" class="auth-section">
+        <h2>Blog Editor</h2>
+        <p>관리자만 접근할 수 있습니다.</p>
+        <button class="github-login-btn" onclick="loginWithGitHub()">
+          <i class="bi bi-github"></i>
+          GitHub으로 로그인
+        </button>
+      </div>
+
+      <!-- Editor Section -->
+      <div id="editorSection" style="display: none;">
+
+        <!-- User Info -->
+        <div class="user-info">
+          <div class="user-details">
+            <img id="userAvatar" src="" alt="User">
+            <div>
+              <strong id="userName"></strong>
+              <div style="font-size: 12px; color: #666;" id="userEmail"></div>
+            </div>
+          </div>
+          <button class="logout-btn" onclick="logout()">로그아웃</button>
+        </div>
+
+        <h2>새 블로그 글 작성</h2>
+
+        <!-- Post Form -->
+        <form id="postForm" onsubmit="publishPost(event)">
+
+          <div class="form-group">
+            <label for="postTitle">제목 *</label>
+            <input type="text" id="postTitle" class="form-control" required placeholder="블로그 글 제목을 입력하세요">
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="postCategory">카테고리</label>
+                <input type="text" id="postCategory" class="form-control" placeholder="예: Development, AI, Tutorial">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="postAuthor">작성자</label>
+                <input type="text" id="postAuthor" class="form-control" value="Yoonsuh Jung">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="postExcerpt">요약 (150자 이내) *</label>
+            <textarea id="postExcerpt" class="form-control" rows="2" required maxlength="150" placeholder="글 요약을 입력하세요"></textarea>
+            <small class="text-muted"><span id="excerptCount">0</span>/150 자</small>
+          </div>
+
+          <div class="form-group">
+            <label>태그</label>
+            <div class="tag-input-container" id="tagContainer">
+              <input type="text" class="tag-input-field" id="tagInput" placeholder="태그 입력 후 Enter">
+            </div>
+            <small class="text-muted">Enter 키를 눌러 태그를 추가하세요</small>
+          </div>
+
+          <div class="form-group">
+            <label for="postImage">대표 이미지 URL (선택사항)</label>
+            <input type="url" id="postImage" class="form-control" placeholder="https://example.com/image.jpg">
+          </div>
+
+          <div class="form-group">
+            <label for="postContent">본문 (Markdown) *</label>
+            <textarea id="postContent"></textarea>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="publish-btn" id="publishBtn">
+              <i class="bi bi-upload"></i> 발행하기
+            </button>
+            <button type="button" class="publish-btn" onclick="resetForm()" style="background: #6c757d; margin-left: 10px;">
+              <i class="bi bi-x-circle"></i> 초기화
+            </button>
+          </div>
+
+          <div id="statusMessage" class="status-message"></div>
+        </form>
+
+        <!-- Existing Posts -->
+        <div class="post-list">
+          <h3>작성된 글 관리</h3>
+          <div id="loadingPosts" class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <div id="postsList"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Markdown Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
+  <!-- Blog Editor JS -->
+  <script src="assets/js/blog-editor.js"></script>
+
+</body>
+
+</html>
