@@ -197,8 +197,204 @@ function showEditor() {
     ]
   });
 
+  // Initialize real-time preview
+  initializePreview();
+
+  // Initialize image paste handler
+  initializeImagePaste();
+
   // Load existing posts
   loadExistingPosts();
+}
+
+// Initialize real-time preview
+function initializePreview() {
+  if (!editor) return;
+
+  // Configure marked.js
+  if (typeof marked !== 'undefined') {
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      highlight: function(code, lang) {
+        if (typeof Prism !== 'undefined' && lang && Prism.languages[lang]) {
+          return Prism.highlight(code, Prism.languages[lang], lang);
+        }
+        return code;
+      }
+    });
+  }
+
+  // Update preview on editor change
+  editor.codemirror.on('change', function() {
+    updatePreview();
+  });
+
+  // Initial preview update
+  updatePreview();
+}
+
+// Update preview content
+function updatePreview() {
+  const previewContent = document.getElementById('previewContent');
+  if (!previewContent || !editor) return;
+
+  const markdown = editor.value();
+
+  if (!markdown || markdown.trim() === '') {
+    previewContent.innerHTML = '<p style="color: #999; text-align: center; padding: 40px;">본문을 입력하면 여기에 미리보기가 표시됩니다...</p>';
+    return;
+  }
+
+  if (typeof marked !== 'undefined') {
+    const html = marked.parse(markdown);
+
+    // Remove meta tags for safety
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    const metaTags = tempDiv.querySelectorAll('meta');
+    metaTags.forEach(tag => tag.remove());
+
+    previewContent.innerHTML = tempDiv.innerHTML;
+
+    // Apply syntax highlighting
+    if (typeof Prism !== 'undefined') {
+      previewContent.querySelectorAll('pre code').forEach((block) => {
+        Prism.highlightElement(block);
+      });
+    }
+  } else {
+    previewContent.innerHTML = markdown.replace(/\n/g, '<br>');
+  }
+}
+
+// Toggle preview visibility
+function togglePreview() {
+  const previewColumn = document.getElementById('previewColumn');
+  const previewToggle = document.getElementById('previewToggle');
+
+  if (previewColumn.style.display === 'none') {
+    previewColumn.style.display = 'block';
+    previewToggle.innerHTML = '<i class="bi bi-eye-slash"></i> 숨기기';
+  } else {
+    previewColumn.style.display = 'none';
+    previewToggle.innerHTML = '<i class="bi bi-eye"></i> 보기';
+  }
+}
+
+// Initialize image paste handler
+function initializeImagePaste() {
+  if (!editor) return;
+
+  const cm = editor.codemirror;
+  const wrapper = cm.getWrapperElement();
+
+  // Listen for paste events
+  wrapper.addEventListener('paste', async function(e) {
+    const items = e.clipboardData.items;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        e.preventDefault();
+
+        const blob = items[i].getAsFile();
+        await handleImageUpload(blob);
+        break;
+      }
+    }
+  });
+
+  // Also handle drag and drop
+  wrapper.addEventListener('drop', async function(e) {
+    if (e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.indexOf('image') !== -1) {
+        e.preventDefault();
+        await handleImageUpload(file);
+      }
+    }
+  });
+}
+
+// Handle image upload (convert to base64 or upload to GitHub)
+async function handleImageUpload(file) {
+  try {
+    // Show uploading status
+    const cursor = editor.codemirror.getCursor();
+    editor.codemirror.replaceRange('![업로드 중...]()', cursor);
+
+    // Option 1: Convert to base64 (embedded in markdown)
+    // For small images, we can embed them directly
+    if (file.size < 1024 * 1024) { // Less than 1MB
+      const base64 = await fileToBase64(file);
+      const imageMarkdown = `![image](${base64})`;
+
+      // Replace the placeholder
+      const doc = editor.codemirror.getDoc();
+      const searchCursor = doc.getSearchCursor('![업로드 중...]()', cursor);
+      if (searchCursor.findNext()) {
+        searchCursor.replace(imageMarkdown);
+      }
+
+      showStatus('이미지가 추가되었습니다.', 'success');
+    } else {
+      // Option 2: Upload to GitHub repository (for larger files)
+      const imageUrl = await uploadImageToGitHub(file);
+      const imageMarkdown = `![image](${imageUrl})`;
+
+      const doc = editor.codemirror.getDoc();
+      const searchCursor = doc.getSearchCursor('![업로드 중...]()', cursor);
+      if (searchCursor.findNext()) {
+        searchCursor.replace(imageMarkdown);
+      }
+
+      showStatus('이미지가 업로드되었습니다.', 'success');
+    }
+  } catch (error) {
+    console.error('Image upload error:', error);
+
+    // Remove the placeholder on error
+    const doc = editor.codemirror.getDoc();
+    const searchCursor = doc.getSearchCursor('![업로드 중...]()');
+    if (searchCursor.findNext()) {
+      searchCursor.replace('');
+    }
+
+    showStatus('이미지 업로드 실패: ' + error.message, 'error');
+  }
+}
+
+// Convert file to base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// Upload image to GitHub repository
+async function uploadImageToGitHub(file) {
+  const fileName = `image-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const path = `assets/img/blog/${fileName}`;
+
+  // Convert file to base64
+  const base64Content = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result.split(',')[1]; // Remove data:image/...;base64, prefix
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  // Upload to GitHub
+  await createOrUpdateFile(path, base64Content, `Upload blog image: ${fileName}`, true);
+
+  // Return the URL
+  return `/${path}`;
 }
 
 // Logout
@@ -306,7 +502,7 @@ async function updatePostOnGitHub(oldFilename, content, newFilename) {
 }
 
 // Create or update file on GitHub
-async function createOrUpdateFile(path, content, message) {
+async function createOrUpdateFile(path, content, message, isBinary = false) {
   const url = `https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${path}`;
 
   // Get current file SHA if exists
@@ -326,6 +522,16 @@ async function createOrUpdateFile(path, content, message) {
     // File doesn't exist, that's okay
   }
 
+  // Encode content based on file type
+  let encodedContent;
+  if (isBinary) {
+    // Content is already base64 for binary files
+    encodedContent = content;
+  } else {
+    // Encode text content to base64
+    encodedContent = btoa(unescape(encodeURIComponent(content)));
+  }
+
   // Create/update file
   const response = await fetch(url, {
     method: 'PUT',
@@ -336,7 +542,7 @@ async function createOrUpdateFile(path, content, message) {
     },
     body: JSON.stringify({
       message: message,
-      content: btoa(unescape(encodeURIComponent(content))),
+      content: encodedContent,
       sha: sha,
       branch: CONFIG.GITHUB_BRANCH
     })
