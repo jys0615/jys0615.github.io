@@ -432,15 +432,29 @@ async function updatePostsIndex(action, filename, oldFilename = null) {
 // Load existing posts
 async function loadExistingPosts() {
   try {
-    const response = await fetch('data/posts-index.json');
+    // Add cache-busting parameter to always get the latest posts-index.json
+    const timestamp = new Date().getTime();
+    const response = await fetch(`data/posts-index.json?v=${timestamp}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to load posts index: ${response.status}`);
+    }
+
     const postsIndex = await response.json();
 
     const postPromises = postsIndex.posts.map(async (postFile) => {
       try {
         const postResponse = await fetch(`_posts/${postFile}`);
+
+        if (!postResponse.ok) {
+          console.warn(`Post file not found: ${postFile} (${postResponse.status})`);
+          return null;
+        }
+
         const postContent = await postResponse.text();
         return { filename: postFile, content: postContent };
       } catch (error) {
+        console.error(`Error loading post ${postFile}:`, error);
         return null;
       }
     });

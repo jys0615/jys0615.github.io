@@ -55,12 +55,25 @@ function formatDate(dateString) {
 // Load all posts index
 async function loadPostsIndex() {
   try {
-    const response = await fetch('data/posts-index.json');
+    // Add cache-busting parameter to always get the latest posts-index.json
+    const timestamp = new Date().getTime();
+    const response = await fetch(`data/posts-index.json?v=${timestamp}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to load posts index: ${response.status}`);
+    }
+
     const postsIndex = await response.json();
 
     const postPromises = postsIndex.posts.map(async (postFile) => {
       try {
         const postResponse = await fetch(`_posts/${postFile}`);
+
+        if (!postResponse.ok) {
+          console.warn(`Post file not found: ${postFile} (${postResponse.status})`);
+          return null;
+        }
+
         const postContent = await postResponse.text();
         const { frontmatter, content } = parseFrontmatter(postContent);
 
@@ -166,6 +179,7 @@ function renderPost(post) {
     marked.setOptions({
       breaks: true,
       gfm: true,
+      sanitize: false,
       highlight: function(code, lang) {
         if (typeof Prism !== 'undefined' && lang && Prism.languages[lang]) {
           return Prism.highlight(code, Prism.languages[lang], lang);
@@ -173,7 +187,16 @@ function renderPost(post) {
         return code;
       }
     });
-    document.getElementById('postBody').innerHTML = marked.parse(post.content);
+
+    const htmlContent = marked.parse(post.content);
+
+    // Remove any meta tags from the parsed content to prevent CSP errors
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    const metaTags = tempDiv.querySelectorAll('meta');
+    metaTags.forEach(tag => tag.remove());
+
+    document.getElementById('postBody').innerHTML = tempDiv.innerHTML;
   } else {
     document.getElementById('postBody').innerHTML = post.content.replace(/\n/g, '<br>');
   }
