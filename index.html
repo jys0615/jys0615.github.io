@@ -35,6 +35,9 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
+  <!-- Blog CSS File -->
+  <link href="assets/css/blog.css" rel="stylesheet">
+
   <!-- =======================================================
   * Template Name: iPortfolio
   * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
@@ -73,7 +76,7 @@
         <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
         <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
-        <li><a href="blog.html"><i class="bi bi-pencil-square navicon"></i> Blog</a></li>
+        <li><a href="#blog"><i class="bi bi-pencil-square navicon"></i> Blog</a></li>
         <!--<li><a href="#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li>-->
         <!--<li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
@@ -546,6 +549,35 @@
 
     </section><!-- /Portfolio Section -->
 
+    <!-- Blog Section -->
+    <section id="blog" class="blog section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Blog</h2>
+        <p>Check out my latest blog posts where I share my thoughts on development, AI, and more.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4" id="latestBlogPosts">
+          <!-- Blog posts will be loaded here dynamically -->
+          <div class="col-12 text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-12 text-center">
+            <a href="blog.html" class="btn btn-primary">View All Posts</a>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Blog Section -->
 
     <!-- Contact Section -->
     <section id="contact" class="contact section">
@@ -672,6 +704,145 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Load Latest Blog Posts -->
+  <script>
+    // Load latest blog posts for index page
+    async function loadLatestBlogPosts() {
+      try {
+        // Add cache-busting parameter
+        const timestamp = new Date().getTime();
+        const response = await fetch(`data/posts-index.json?v=${timestamp}`);
+
+        if (!response.ok) {
+          throw new Error(`Failed to load posts index: ${response.status}`);
+        }
+
+        const postsIndex = await response.json();
+
+        // Load post contents
+        const postPromises = postsIndex.posts.slice(0, 3).map(async (postFile) => {
+          try {
+            const postResponse = await fetch(`_posts/${postFile}`);
+
+            if (!postResponse.ok) {
+              console.warn(`Post file not found: ${postFile}`);
+              return null;
+            }
+
+            const postContent = await postResponse.text();
+            const { frontmatter, content } = parseFrontmatter(postContent);
+
+            return {
+              id: postFile.replace('.md', ''),
+              title: frontmatter.title || 'Untitled',
+              date: frontmatter.date || new Date().toISOString(),
+              excerpt: frontmatter.excerpt || content.substring(0, 150) + '...',
+              image: frontmatter.image || '',
+              category: frontmatter.category || 'Uncategorized',
+              tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : []
+            };
+          } catch (error) {
+            console.error(`Error loading post ${postFile}:`, error);
+            return null;
+          }
+        });
+
+        const posts = (await Promise.all(postPromises)).filter(p => p !== null);
+
+        // Render posts
+        const container = document.getElementById('latestBlogPosts');
+        if (posts.length === 0) {
+          container.innerHTML = '<div class="col-12 text-center"><p>No blog posts yet. Check back soon!</p></div>';
+          return;
+        }
+
+        container.innerHTML = posts.map(post => `
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <article class="blog-card">
+              ${post.image ? `
+                <div class="blog-card-img">
+                  <img src="${post.image}" alt="${post.title}" class="img-fluid">
+                </div>
+              ` : ''}
+              <div class="blog-card-content p-4">
+                <h3 class="blog-card-title">
+                  <a href="blog-post.html?id=${post.id}">${post.title}</a>
+                </h3>
+                <div class="blog-card-meta mb-3">
+                  <span><i class="bi bi-calendar"></i> ${formatDate(post.date)}</span>
+                  ${post.category ? `<span class="ms-3"><i class="bi bi-folder"></i> ${post.category}</span>` : ''}
+                </div>
+                <p class="blog-card-excerpt">${post.excerpt}</p>
+                ${post.tags && post.tags.length > 0 ? `
+                  <div class="blog-card-tags mt-3">
+                    ${post.tags.slice(0, 3).map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join('')}
+                  </div>
+                ` : ''}
+                <div class="mt-3">
+                  <a href="blog-post.html?id=${post.id}" class="btn btn-primary btn-sm">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+              </div>
+            </article>
+          </div>
+        `).join('');
+
+      } catch (error) {
+        console.error('Error loading latest blog posts:', error);
+        const container = document.getElementById('latestBlogPosts');
+        container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Unable to load blog posts at the moment.</p></div>';
+      }
+    }
+
+    // Parse frontmatter from markdown
+    function parseFrontmatter(content) {
+      const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+      const match = content.match(frontmatterRegex);
+
+      if (!match) {
+        return { frontmatter: {}, content: content };
+      }
+
+      const frontmatterText = match[1];
+      const bodyContent = match[2];
+
+      const frontmatter = {};
+      const lines = frontmatterText.split('\n');
+
+      lines.forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > -1) {
+          const key = line.substring(0, colonIndex).trim();
+          let value = line.substring(colonIndex + 1).trim();
+
+          // Remove quotes
+          if ((value.startsWith('"') && value.endsWith('"')) ||
+              (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+          }
+
+          // Parse arrays (tags)
+          if (value.startsWith('[') && value.endsWith(']')) {
+            value = value.slice(1, -1).split(',').map(v => v.trim().replace(/['"]/g, ''));
+          }
+
+          frontmatter[key] = value;
+        }
+      });
+
+      return { frontmatter, content: bodyContent };
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+
+    // Load posts when DOM is ready
+    document.addEventListener('DOMContentLoaded', loadLatestBlogPosts);
+  </script>
 
 </body>
 
