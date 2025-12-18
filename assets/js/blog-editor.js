@@ -363,7 +363,11 @@ async function deleteFile(path, message) {
   });
 
   if (!getResponse.ok) {
-    throw new Error('File not found');
+    if (getResponse.status === 404) {
+      console.warn(`File not found on GitHub: ${path}. It may have been already deleted.`);
+      throw new Error('File not found on GitHub. It may have been already deleted.');
+    }
+    throw new Error(`Failed to get file info: ${getResponse.status}`);
   }
 
   const fileData = await getResponse.json();
@@ -581,10 +585,31 @@ async function deletePost(filename) {
 
   try {
     const path = `_posts/${filename}`;
-    await deleteFile(path, `Delete post: ${filename}`);
+    let fileDeleteSuccess = false;
+
+    // Try to delete the file from GitHub
+    try {
+      await deleteFile(path, `Delete post: ${filename}`);
+      fileDeleteSuccess = true;
+    } catch (error) {
+      // If file not found on GitHub, just log it and continue to remove from index
+      if (error.message.includes('not found')) {
+        console.warn(`File ${filename} not found on GitHub, removing from index only.`);
+      } else {
+        // If it's a different error, rethrow it
+        throw error;
+      }
+    }
+
+    // Always try to remove from posts-index.json
     await updatePostsIndex('delete', filename);
 
-    showStatus('글이 삭제되었습니다.', 'success');
+    if (fileDeleteSuccess) {
+      showStatus('글이 삭제되었습니다.', 'success');
+    } else {
+      showStatus('인덱스에서 제거되었습니다. (파일은 이미 삭제되어 있었습니다)', 'success');
+    }
+
     loadExistingPosts();
 
   } catch (error) {
