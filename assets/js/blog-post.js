@@ -297,7 +297,99 @@ function loadPostNavigation() {
   }
 }
 
+/**
+ * Like System
+ * Uses localStorage to track likes per post
+ */
+
+// Get like data for current post
+function getLikeData() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const postId = urlParams.get('id');
+
+  if (!postId) return { count: 0, liked: false };
+
+  // Get all likes from localStorage
+  const likes = JSON.parse(localStorage.getItem('blog_likes') || '{}');
+
+  return {
+    count: likes[postId]?.count || 0,
+    liked: likes[postId]?.userLiked || false
+  };
+}
+
+// Save like data for current post
+function saveLikeData(count, liked) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const postId = urlParams.get('id');
+
+  if (!postId) return;
+
+  const likes = JSON.parse(localStorage.getItem('blog_likes') || '{}');
+
+  likes[postId] = {
+    count: count,
+    userLiked: liked
+  };
+
+  localStorage.setItem('blog_likes', JSON.stringify(likes));
+}
+
+// Toggle like for current post
+function toggleLike() {
+  const likeData = getLikeData();
+  const likeButton = document.getElementById('likeButton');
+  const likeText = document.getElementById('likeText');
+  const likeCount = document.getElementById('likeCount');
+
+  let newCount = likeData.count;
+  let newLiked = !likeData.liked;
+
+  if (newLiked) {
+    // User is liking the post
+    newCount++;
+    likeButton.classList.add('liked');
+    likeText.textContent = 'Liked';
+  } else {
+    // User is unliking the post
+    newCount = Math.max(0, newCount - 1);
+    likeButton.classList.remove('liked');
+    likeText.textContent = 'Like';
+  }
+
+  // Update UI
+  likeCount.textContent = `${newCount} ${newCount === 1 ? 'like' : 'likes'}`;
+
+  // Save to localStorage
+  saveLikeData(newCount, newLiked);
+
+  // Add animation
+  likeButton.classList.add('animate-like');
+  setTimeout(() => {
+    likeButton.classList.remove('animate-like');
+  }, 300);
+}
+
+// Initialize like button
+function initializeLikeButton() {
+  const likeData = getLikeData();
+  const likeButton = document.getElementById('likeButton');
+  const likeText = document.getElementById('likeText');
+  const likeCount = document.getElementById('likeCount');
+
+  if (!likeButton) return;
+
+  // Set initial state
+  likeCount.textContent = `${likeData.count} ${likeData.count === 1 ? 'like' : 'likes'}`;
+
+  if (likeData.liked) {
+    likeButton.classList.add('liked');
+    likeText.textContent = 'Liked';
+  }
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   loadBlogPost();
+  initializeLikeButton();
 });
