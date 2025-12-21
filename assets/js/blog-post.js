@@ -349,16 +349,16 @@ function toggleLike() {
     // User is liking the post
     newCount++;
     likeButton.classList.add('liked');
-    likeText.textContent = 'Liked';
+    likeText.textContent = '좋아요';
   } else {
     // User is unliking the post
     newCount = Math.max(0, newCount - 1);
     likeButton.classList.remove('liked');
-    likeText.textContent = 'Like';
+    likeText.textContent = '좋아요';
   }
 
   // Update UI
-  likeCount.textContent = `${newCount} ${newCount === 1 ? 'like' : 'likes'}`;
+  likeCount.textContent = `${newCount}`;
 
   // Save to localStorage
   saveLikeData(newCount, newLiked);
@@ -380,11 +380,11 @@ function initializeLikeButton() {
   if (!likeButton) return;
 
   // Set initial state
-  likeCount.textContent = `${likeData.count} ${likeData.count === 1 ? 'like' : 'likes'}`;
+  likeCount.textContent = `${likeData.count}`;
 
   if (likeData.liked) {
     likeButton.classList.add('liked');
-    likeText.textContent = 'Liked';
+    likeText.textContent = '좋아요';
   }
 }
 
