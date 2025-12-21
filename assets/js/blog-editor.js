@@ -9,7 +9,9 @@ const CONFIG = {
   GITHUB_REPO: 'jys0615.github.io', // Your repository name
   GITHUB_BRANCH: 'main', // Your branch name (main or master)
   AUTHORIZED_USERS: ['jys0615'], // List of GitHub usernames who can access the editor
-  CLIENT_ID: 'YOUR_GITHUB_OAUTH_APP_CLIENT_ID' // Will be set up later
+  CLIENT_ID: 'YOUR_GITHUB_OAUTH_APP_CLIENT_ID', // Will be set up later
+  // SHA-256 hash of the authorized token (for security)
+  AUTHORIZED_TOKEN_HASH: '801e1ec41480edecffb58d20d75d9b2c3fb62f325fedc7f52727435b8bd92e48'
 };
 
 let accessToken = null;
@@ -19,15 +21,23 @@ let currentEditingPost = null;
 let allPosts = [];
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Check if user is already logged in
   const token = localStorage.getItem('github_token');
   const user = localStorage.getItem('github_user');
 
   if (token && user) {
-    accessToken = token;
-    currentUser = JSON.parse(user);
-    checkAuthorization();
+    // Verify the stored token is still the authorized one
+    const tokenHash = await hashToken(token);
+    if (tokenHash === CONFIG.AUTHORIZED_TOKEN_HASH) {
+      accessToken = token;
+      currentUser = JSON.parse(user);
+      checkAuthorization();
+    } else {
+      // Clear invalid token from storage
+      localStorage.removeItem('github_token');
+      localStorage.removeItem('github_user');
+    }
   }
 
   // Check for OAuth callback
@@ -128,6 +138,13 @@ function showTokenPrompt() {
 
 async function verifyAndStoreToken(token) {
   try {
+    // First check if the token hash matches the authorized token hash
+    const tokenHash = await hashToken(token);
+    if (tokenHash !== CONFIG.AUTHORIZED_TOKEN_HASH) {
+      alert('인증되지 않은 토큰입니다. 관리자만 접근할 수 있습니다.');
+      return;
+    }
+
     const response = await fetch('https://api.github.com/user', {
       headers: {
         'Authorization': `token ${token}`,
@@ -151,6 +168,16 @@ async function verifyAndStoreToken(token) {
     console.error('Token verification failed:', error);
     alert('토큰 검증 중 오류가 발생했습니다.');
   }
+}
+
+// Hash token using SHA-256
+async function hashToken(token) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(token);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
 }
 
 // Check if user is authorized
