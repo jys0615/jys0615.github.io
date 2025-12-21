@@ -132,6 +132,17 @@
 
             </article><!-- End blog post -->
 
+            <!-- Like Section -->
+            <div class="post-interactions mt-4 mb-4">
+              <div class="like-section">
+                <button id="likeButton" class="like-btn" onclick="toggleLike()">
+                  <i class="bi bi-heart"></i>
+                  <span id="likeText">Like</span>
+                </button>
+                <span id="likeCount" class="like-count">0 likes</span>
+              </div>
+            </div>
+
             <!-- Blog Navigation -->
             <div class="post-navigation" id="postNavigation">
               <div class="row">
@@ -145,8 +156,9 @@
             </div><!-- End blog navigation -->
 
             <!-- Comments Section -->
-            <div class="comments-section mt-5" id="disqus_thread">
-              <!-- Disqus comments will be loaded here -->
+            <div class="comments-section mt-5">
+              <h3 class="comments-title mb-4">Comments</h3>
+              <div id="giscus-container"></div>
             </div>
 
           </div>
@@ -233,21 +245,22 @@
   <!-- Blog Post JS File -->
   <script src="assets/js/blog-post.js"></script>
 
-  <!-- Disqus Comments -->
-  <script>
-    var disqus_config = function () {
-      this.page.url = window.location.href;
-      this.page.identifier = new URLSearchParams(window.location.search).get('id');
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://YOUR-DISQUS-SHORTNAME.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
+  <!-- Giscus Comments (GitHub Discussions) -->
+  <script src="https://giscus.app/client.js"
+        data-repo="jys0615/jys0615.github.io"
+        data-repo-id="R_kgDONwt5gQ"
+        data-category="General"
+        data-category-id="DIC_kwDONwt5gc4Clt_k"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="ko"
+        crossorigin="anonymous"
+        async>
   </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 </body>
 
