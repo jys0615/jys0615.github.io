@@ -160,7 +160,7 @@ function renderComments(comments) {
   }
 
   commentsList.innerHTML = comments.map(comment => `
-    <div class="comment-item ${comment.isOwn ? 'own-comment' : ''}" data-comment-id="${comment.id}">
+    <div class="comment-item ${comment.isOwn ? 'own-comment' : ''}" data-comment-id="${comment.id}" data-user-id="${comment.userId}">
       <div class="comment-header">
         <div class="comment-author">
           <i class="bi bi-person-circle"></i>
@@ -172,7 +172,7 @@ function renderComments(comments) {
           ${comment.edited ? '<span class="edited-badge">edited</span>' : ''}
           ${comment.isOwn ? `
             <div class="comment-actions">
-              <button class="btn-edit-comment" onclick="handleEditComment('${comment.id}', '${escapeHtml(comment.text).replace(/'/g, "\\'")}')">
+              <button class="btn-edit-comment" onclick="handleEditComment('${comment.id}', '${comment.userId}', '${escapeHtml(comment.text).replace(/'/g, "\\'")}')">
                 <i class="bi bi-pencil"></i>
               </button>
               <button class="btn-delete-comment" onclick="handleDeleteComment('${comment.id}', '${comment.userId}')">
@@ -277,7 +277,7 @@ async function handleDeleteComment(commentId, userId) {
 /**
  * Handle comment editing
  */
-async function handleEditComment(commentId, currentText) {
+async function handleEditComment(commentId, userId, currentText) {
   if (!currentPostId || typeof editComment !== 'function') return;
 
   const newText = prompt('Edit your comment:', currentText);
@@ -292,9 +292,6 @@ async function handleEditComment(commentId, currentText) {
   }
 
   try {
-    const commentItem = document.querySelector(`[data-comment-id="${commentId}"]`);
-    const userId = commentItem?.dataset.userId;
-
     const success = await editComment(currentPostId, commentId, userId, newText.trim());
     if (success) {
       showCommentSuccess('Comment updated');
