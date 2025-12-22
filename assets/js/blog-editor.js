@@ -346,19 +346,27 @@ function initializeImagePaste() {
 // Handle image upload (convert to base64 or upload to GitHub)
 async function handleImageUpload(file) {
   try {
-    // Show uploading status
+    // Generate short image name
+    const timestamp = Date.now();
+    const shortName = file.name.length > 20
+      ? file.name.substring(0, 17) + '...'
+      : file.name;
+    const imagePlaceholder = `![${shortName}]()`;
+
+    // Show uploading status with short name
     const cursor = editor.codemirror.getCursor();
-    editor.codemirror.replaceRange('![업로드 중...]()', cursor);
+    const uploadingText = `![업로드 중: ${shortName}]()`;
+    editor.codemirror.replaceRange(uploadingText, cursor);
 
     // Option 1: Convert to base64 (embedded in markdown)
     // For small images, we can embed them directly
     if (file.size < 1024 * 1024) { // Less than 1MB
       const base64 = await fileToBase64(file);
-      const imageMarkdown = `![image](${base64})`;
+      const imageMarkdown = `![${shortName}](${base64})`;
 
       // Replace the placeholder
       const doc = editor.codemirror.getDoc();
-      const searchCursor = doc.getSearchCursor('![업로드 중...]()', cursor);
+      const searchCursor = doc.getSearchCursor(uploadingText, cursor);
       if (searchCursor.findNext()) {
         searchCursor.replace(imageMarkdown);
       }
@@ -367,10 +375,10 @@ async function handleImageUpload(file) {
     } else {
       // Option 2: Upload to GitHub repository (for larger files)
       const imageUrl = await uploadImageToGitHub(file);
-      const imageMarkdown = `![image](${imageUrl})`;
+      const imageMarkdown = `![${shortName}](${imageUrl})`;
 
       const doc = editor.codemirror.getDoc();
-      const searchCursor = doc.getSearchCursor('![업로드 중...]()', cursor);
+      const searchCursor = doc.getSearchCursor(uploadingText, cursor);
       if (searchCursor.findNext()) {
         searchCursor.replace(imageMarkdown);
       }
@@ -382,9 +390,11 @@ async function handleImageUpload(file) {
 
     // Remove the placeholder on error
     const doc = editor.codemirror.getDoc();
-    const searchCursor = doc.getSearchCursor('![업로드 중...]()');
-    if (searchCursor.findNext()) {
-      searchCursor.replace('');
+    const allContent = doc.getValue();
+    const uploadingPattern = /!\[업로드 중: .*?\]\(\)/;
+    if (uploadingPattern.test(allContent)) {
+      const newContent = allContent.replace(uploadingPattern, '');
+      doc.setValue(newContent);
     }
 
     showStatus('이미지 업로드 실패: ' + error.message, 'error');
