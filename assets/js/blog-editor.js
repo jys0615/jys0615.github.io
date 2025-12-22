@@ -255,10 +255,23 @@ function initializePreview() {
   // Update preview on editor change
   editor.codemirror.on('change', function() {
     updatePreview();
+    checkForNotionAttachments();
   });
 
   // Initial preview update
   updatePreview();
+}
+
+// Check for Notion attachment URLs and warn user
+function checkForNotionAttachments() {
+  if (!editor) return;
+
+  const content = editor.value();
+  const notionAttachmentRegex = /!\[.*?\]\(attachment:[^\)]+\)/g;
+
+  if (notionAttachmentRegex.test(content)) {
+    showStatus('⚠️ 노션 이미지가 감지되었습니다! 이미지 파일을 직접 붙여넣어주세요. (노션에서 복사한 텍스트는 작동하지 않습니다)', 'error');
+  }
 }
 
 // Update preview content
@@ -319,15 +332,32 @@ function initializeImagePaste() {
   // Listen for paste events
   wrapper.addEventListener('paste', async function(e) {
     const items = e.clipboardData.items;
+    let hasImage = false;
 
+    // Check if there's an actual image file being pasted
     for (let i = 0; i < items.length; i++) {
       if (items[i].type.indexOf('image') !== -1) {
         e.preventDefault();
+        hasImage = true;
 
         const blob = items[i].getAsFile();
-        await handleImageUpload(blob);
+        if (blob) {
+          await handleImageUpload(blob);
+        }
         break;
       }
+    }
+
+    // If no image was found but text contains Notion attachment URLs
+    if (!hasImage) {
+      setTimeout(() => {
+        const content = editor.value();
+        const notionAttachmentRegex = /!\[.*?\]\(attachment:[^\)]+\)/g;
+
+        if (notionAttachmentRegex.test(content)) {
+          showStatus('⚠️ 노션에서 복사한 텍스트가 감지되었습니다. 이미지를 보려면:\n1. 맥북에서 스크린샷을 찍고 (⌘+Shift+4)\n2. 에디터에 직접 붙여넣으세요 (⌘+V)', 'error');
+        }
+      }, 100);
     }
   });
 
