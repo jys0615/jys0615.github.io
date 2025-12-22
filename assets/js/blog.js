@@ -287,6 +287,11 @@ function filterPosts() {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Firebase first
+  if (typeof initializeFirebase === 'function') {
+    initializeFirebase();
+  }
+
   loadBlogPosts();
 
   // Add event listeners for filters
