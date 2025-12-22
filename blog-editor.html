@@ -352,24 +352,22 @@
       height: 3rem;
     }
 
-    /* Hide long base64 URLs in editor */
+    /* Hide long base64 URLs in CodeMirror editor */
     .CodeMirror-line {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 100px;
+    }
+
+    /* Make editor lines wrap nicely */
+    .CodeMirror pre.CodeMirror-line {
+      white-space: pre-wrap;
       word-wrap: break-word;
     }
 
-    /* Style for image markdown in editor */
-    .cm-string.cm-url {
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      display: inline-block;
-      vertical-align: bottom;
-    }
-
-    /* Specific handling for base64 image URLs */
-    .CodeMirror pre.CodeMirror-line {
-      overflow: hidden;
+    /* Limit the visible width of very long lines */
+    .CodeMirror-scroll {
+      overflow-x: auto !important;
     }
   </style>
 </head>

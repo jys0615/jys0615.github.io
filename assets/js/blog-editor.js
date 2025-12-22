@@ -249,55 +249,8 @@ function showEditor() {
   // Initialize image paste handler
   initializeImagePaste();
 
-  // Setup base64 URL hiding in editor
-  setupBase64URLHiding();
-
   // Load existing posts
   loadExistingPosts();
-}
-
-// Setup custom rendering to hide long base64 URLs in editor
-function setupBase64URLHiding() {
-  if (!editor) return;
-
-  const cm = editor.codemirror;
-
-  // Add custom overlay mode to shorten base64 URLs visually
-  cm.addOverlay({
-    token: function(stream) {
-      // Check if we're in an image markdown pattern
-      if (stream.match(/!\[.*?\]\(data:image\/[^;]+;base64,/)) {
-        // Consume the rest of the base64 data
-        const startPos = stream.pos;
-        while (stream.peek() && stream.peek() !== ')') {
-          stream.next();
-        }
-
-        // If we consumed a long base64 string, mark it
-        if (stream.pos - startPos > 50) {
-          return 'base64-data';
-        }
-      }
-
-      stream.next();
-      return null;
-    }
-  });
-
-  // Add CSS class to hide base64 content
-  const style = document.createElement('style');
-  style.textContent = `
-    .cm-base64-data {
-      font-size: 0 !important;
-    }
-    .cm-base64-data::after {
-      content: '...[이미지 데이터]...)';
-      font-size: 14px;
-      color: #666;
-      font-style: italic;
-    }
-  `;
-  document.head.appendChild(style);
 }
 
 // Initialize real-time preview
@@ -454,33 +407,19 @@ async function handleImageUpload(file) {
     const uploadingText = `![업로드 중: ${shortName}]()`;
     editor.codemirror.replaceRange(uploadingText, cursor);
 
-    // Option 1: Convert to base64 (embedded in markdown)
-    // For small images, we can embed them directly
-    if (file.size < 1024 * 1024) { // Less than 1MB
-      const base64 = await fileToBase64(file);
-      const imageMarkdown = `![${shortName}](${base64})`;
+    // Upload all images to GitHub repository for clean URLs
+    // This prevents long base64 strings from cluttering the editor
+    const imageUrl = await uploadImageToGitHub(file);
+    const imageMarkdown = `![${shortName}](${imageUrl})`;
 
-      // Replace the placeholder
-      const doc = editor.codemirror.getDoc();
-      const searchCursor = doc.getSearchCursor(uploadingText, cursor);
-      if (searchCursor.findNext()) {
-        searchCursor.replace(imageMarkdown);
-      }
-
-      showStatus('이미지가 추가되었습니다.', 'success');
-    } else {
-      // Option 2: Upload to GitHub repository (for larger files)
-      const imageUrl = await uploadImageToGitHub(file);
-      const imageMarkdown = `![${shortName}](${imageUrl})`;
-
-      const doc = editor.codemirror.getDoc();
-      const searchCursor = doc.getSearchCursor(uploadingText, cursor);
-      if (searchCursor.findNext()) {
-        searchCursor.replace(imageMarkdown);
-      }
-
-      showStatus('이미지가 업로드되었습니다.', 'success');
+    // Replace the placeholder
+    const doc = editor.codemirror.getDoc();
+    const searchCursor = doc.getSearchCursor(uploadingText, cursor);
+    if (searchCursor.findNext()) {
+      searchCursor.replace(imageMarkdown);
     }
+
+    showStatus('이미지가 업로드되었습니다.', 'success');
   } catch (error) {
     console.error('Image upload error:', error);
 
