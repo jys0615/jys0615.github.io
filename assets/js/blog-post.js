@@ -130,6 +130,14 @@ async function loadBlogPost() {
     // Render the post
     renderPost(currentPost);
 
+    // Initialize view counter for this post (Firebase version)
+    if (typeof initFirebaseViewCounter === 'function') {
+      initFirebaseViewCounter(postId);
+    } else if (typeof initViewCounter === 'function') {
+      // Fallback to localStorage version
+      initViewCounter(postId);
+    }
+
     // Load recent posts and tags for sidebar
     loadRecentPosts();
     loadTags();

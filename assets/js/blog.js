@@ -181,9 +181,10 @@ function renderPosts() {
           <h3 class="blog-card-title">
             <a href="blog-post.html?id=${post.id}">${post.title}</a>
           </h3>
-          <div class="blog-card-meta mb-3">
+          <div class="blog-card-meta mb-3" data-post-id="${post.id}">
             <span><i class="bi bi-calendar"></i> ${formatDate(post.date)}</span>
             ${post.category ? `<span class="ms-3"><i class="bi bi-folder"></i> ${post.category}</span>` : ''}
+            <span class="ms-3"><i class="bi bi-eye"></i> <span class="view-count">0</span></span>
           </div>
           <p class="blog-card-excerpt">${post.excerpt}</p>
           ${post.tags && post.tags.length > 0 ? `
@@ -200,6 +201,15 @@ function renderPosts() {
   `).join('');
 
   renderPagination();
+
+  // Display view counts for all posts (Firebase version)
+  const postIds = postsToShow.map(post => post.id);
+  if (typeof displayFirebaseViewCounts === 'function') {
+    displayFirebaseViewCounts(postIds);
+  } else if (typeof displayViewCounts === 'function') {
+    // Fallback to localStorage version
+    displayViewCounts(postIds);
+  }
 }
 
 // Render pagination
