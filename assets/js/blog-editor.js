@@ -407,19 +407,38 @@ async function handleImageUpload(file) {
     const uploadingText = `![업로드 중: ${shortName}]()`;
     editor.codemirror.replaceRange(uploadingText, cursor);
 
-    // Upload all images to GitHub repository for clean URLs
-    // This prevents long base64 strings from cluttering the editor
-    const imageUrl = await uploadImageToGitHub(file);
-    const imageMarkdown = `![${shortName}](${imageUrl})`;
+    // Try to upload to GitHub, fallback to base64 if it fails
+    try {
+      const imageUrl = await uploadImageToGitHub(file);
+      const imageMarkdown = `![${shortName}](${imageUrl})`;
 
-    // Replace the placeholder
-    const doc = editor.codemirror.getDoc();
-    const searchCursor = doc.getSearchCursor(uploadingText, cursor);
-    if (searchCursor.findNext()) {
-      searchCursor.replace(imageMarkdown);
+      // Replace the placeholder
+      const doc = editor.codemirror.getDoc();
+      const searchCursor = doc.getSearchCursor(uploadingText, cursor);
+      if (searchCursor.findNext()) {
+        searchCursor.replace(imageMarkdown);
+      }
+
+      showStatus('이미지가 GitHub에 업로드되었습니다.', 'success');
+    } catch (uploadError) {
+      // Fallback to base64 for small images
+      console.warn('GitHub upload failed, using base64:', uploadError);
+
+      if (file.size < 500 * 1024) { // Less than 500KB - use base64
+        const base64 = await fileToBase64(file);
+        const imageMarkdown = `![${shortName}](${base64})`;
+
+        const doc = editor.codemirror.getDoc();
+        const searchCursor = doc.getSearchCursor(uploadingText, cursor);
+        if (searchCursor.findNext()) {
+          searchCursor.replace(imageMarkdown);
+        }
+
+        showStatus('⚠️ GitHub 업로드 실패. 이미지를 base64로 삽입했습니다. (파일이 클 경우 에디터가 느려질 수 있습니다)', 'error');
+      } else {
+        throw new Error('이미지가 너무 큽니다 (500KB 이상). GitHub 업로드가 필요하지만 실패했습니다.');
+      }
     }
-
-    showStatus('이미지가 업로드되었습니다.', 'success');
   } catch (error) {
     console.error('Image upload error:', error);
 

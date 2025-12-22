@@ -352,22 +352,27 @@
       height: 3rem;
     }
 
-    /* Hide long base64 URLs in CodeMirror editor */
-    .CodeMirror-line {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-height: 100px;
-    }
-
-    /* Make editor lines wrap nicely */
-    .CodeMirror pre.CodeMirror-line {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-
-    /* Limit the visible width of very long lines */
+    /* Better handling of long lines in CodeMirror */
     .CodeMirror-scroll {
-      overflow-x: auto !important;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+
+    /* Wrap long lines */
+    .CodeMirror pre.CodeMirror-line {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    /* Limit height of very long lines (like base64) */
+    .CodeMirror-line {
+      max-height: 150px;
+      overflow: hidden;
+    }
+
+    /* Add visual indicator for truncated content */
+    .CodeMirror-lines {
+      padding: 4px 0;
     }
   </style>
 </head>
