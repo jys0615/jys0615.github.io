@@ -1274,3 +1274,91 @@ section,
 .starter-section {
   /* Add your styles here */
 }
+/*--------------------------------------------------------------
+# Portfolio UX Enhancements
+--------------------------------------------------------------*/
+.portfolio-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.portfolio-link:hover {
+  transform: translateY(-5px);
+}
+
+.portfolio-link:hover .portfolio-content {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.portfolio-content {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+.portfolio-content img {
+  transition: transform 0.3s ease;
+}
+
+.portfolio-link:hover .portfolio-content img {
+  transform: scale(1.05);
+}
+
+.portfolio-info {
+  padding: 20px;
+}
+
+.portfolio-info h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--heading-color);
+  margin-bottom: 10px;
+}
+
+.portfolio-info p {
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.view-details-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.portfolio-link:hover .view-details-btn {
+  gap: 10px;
+  color: var(--contrast-color);
+}
+
+.view-details-btn i {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-link:hover .view-details-btn i {
+  transform: translateX(3px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .portfolio-link:hover {
+    transform: none;
+  }
+  
+  .portfolio-link:hover .portfolio-content img {
+    transform: scale(1.02);
+  }
+}
