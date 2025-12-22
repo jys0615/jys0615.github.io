@@ -221,7 +221,26 @@ function showEditor() {
       'code', 'table', '|',
       'preview', 'side-by-side', 'fullscreen', '|',
       'guide'
-    ]
+    ],
+    renderingConfig: {
+      codeSyntaxHighlighting: true,
+      markedOptions: {
+        sanitize: false
+      }
+    },
+    previewRender: function(plainText, preview) {
+      // Custom rendering to shorten base64 image URLs
+      let html = marked.parse(plainText);
+
+      // Replace long base64 data URLs with shortened versions for display
+      html = html.replace(/(<img[^>]+src=")data:image\/[^;]+;base64,[^"]{100,}(")/g, function(match, prefix, suffix) {
+        const shortenedUrl = match.substring(0, prefix.length + 50) + '...[base64 data]...' + suffix;
+        return match; // Keep original for actual rendering, but the editor will show it properly
+      });
+
+      preview.innerHTML = html;
+      return html;
+    }
   });
 
   // Initialize real-time preview
@@ -230,8 +249,55 @@ function showEditor() {
   // Initialize image paste handler
   initializeImagePaste();
 
+  // Setup base64 URL hiding in editor
+  setupBase64URLHiding();
+
   // Load existing posts
   loadExistingPosts();
+}
+
+// Setup custom rendering to hide long base64 URLs in editor
+function setupBase64URLHiding() {
+  if (!editor) return;
+
+  const cm = editor.codemirror;
+
+  // Add custom overlay mode to shorten base64 URLs visually
+  cm.addOverlay({
+    token: function(stream) {
+      // Check if we're in an image markdown pattern
+      if (stream.match(/!\[.*?\]\(data:image\/[^;]+;base64,/)) {
+        // Consume the rest of the base64 data
+        const startPos = stream.pos;
+        while (stream.peek() && stream.peek() !== ')') {
+          stream.next();
+        }
+
+        // If we consumed a long base64 string, mark it
+        if (stream.pos - startPos > 50) {
+          return 'base64-data';
+        }
+      }
+
+      stream.next();
+      return null;
+    }
+  });
+
+  // Add CSS class to hide base64 content
+  const style = document.createElement('style');
+  style.textContent = `
+    .cm-base64-data {
+      font-size: 0 !important;
+    }
+    .cm-base64-data::after {
+      content: '...[이미지 데이터]...)';
+      font-size: 14px;
+      color: #666;
+      font-style: italic;
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 // Initialize real-time preview

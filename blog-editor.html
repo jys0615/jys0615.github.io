@@ -351,6 +351,26 @@
       width: 3rem;
       height: 3rem;
     }
+
+    /* Hide long base64 URLs in editor */
+    .CodeMirror-line {
+      word-wrap: break-word;
+    }
+
+    /* Style for image markdown in editor */
+    .cm-string.cm-url {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: bottom;
+    }
+
+    /* Specific handling for base64 image URLs */
+    .CodeMirror pre.CodeMirror-line {
+      overflow: hidden;
+    }
   </style>
 </head>
 
