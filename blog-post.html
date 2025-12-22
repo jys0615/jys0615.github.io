@@ -33,6 +33,9 @@
   <!-- Blog CSS File -->
   <link href="assets/css/blog.css" rel="stylesheet">
 
+  <!-- Blog Interactions CSS -->
+  <link href="assets/css/blog-interactions.css" rel="stylesheet">
+
   <!-- Marked.js for Markdown rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -132,6 +135,45 @@
               </div><!-- End meta bottom -->
 
             </article><!-- End blog post -->
+
+            <!-- Like Section -->
+            <div class="post-like-section" id="likeSection">
+              <button class="like-button" id="likeButton" onclick="handleLikeClick()">
+                <i class="bi bi-heart"></i>
+                <span id="likeText">Like</span>
+              </button>
+              <span class="like-count" id="likeCount">0 likes</span>
+            </div><!-- End like section -->
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="commentsSection">
+              <h3 class="comments-title">
+                <i class="bi bi-chat-dots"></i>
+                Comments (<span id="commentCount">0</span>)
+              </h3>
+
+              <!-- Comment Form -->
+              <div class="comment-form">
+                <div class="form-group">
+                  <input type="text" id="commentAuthor" class="form-control" placeholder="Your name (optional)" maxlength="50">
+                </div>
+                <div class="form-group">
+                  <textarea id="commentText" class="form-control" rows="3" placeholder="Write a comment..." maxlength="500"></textarea>
+                  <small class="text-muted">
+                    <span id="commentCharCount">0</span>/500 characters
+                  </small>
+                </div>
+                <button class="btn-submit-comment" onclick="handleCommentSubmit()">
+                  <i class="bi bi-send"></i> Post Comment
+                </button>
+              </div><!-- End comment form -->
+
+              <!-- Comments List -->
+              <div class="comments-list" id="commentsList">
+                <!-- Comments will be rendered here -->
+              </div><!-- End comments list -->
+
+            </div><!-- End comments section -->
 
             <!-- Blog Navigation -->
             <div class="post-navigation" id="postNavigation">
@@ -233,11 +275,17 @@
   <!-- Firebase View Counter -->
   <script src="assets/js/firebase-view-counter.js"></script>
 
+  <!-- Firebase Interactions (Likes & Comments) -->
+  <script src="assets/js/firebase-interactions.js"></script>
+
   <!-- View Counter JS File (fallback) -->
   <script src="assets/js/view-counter.js"></script>
 
   <!-- Blog Post JS File -->
   <script src="assets/js/blog-post.js"></script>
+
+  <!-- Blog Interactions UI Handler -->
+  <script src="assets/js/blog-interactions-ui.js"></script>
 
 </body>
 

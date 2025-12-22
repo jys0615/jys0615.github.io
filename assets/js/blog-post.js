@@ -138,6 +138,11 @@ async function loadBlogPost() {
       initViewCounter(postId);
     }
 
+    // Initialize like and comment interactions
+    if (typeof initializePostInteractions === 'function') {
+      initializePostInteractions(postId);
+    }
+
     // Load recent posts and tags for sidebar
     loadRecentPosts();
     loadTags();
