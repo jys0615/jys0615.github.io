@@ -306,7 +306,17 @@ function updatePreview() {
   }
 
   if (typeof marked !== 'undefined') {
-    const html = marked.parse(markdown);
+    let html = marked.parse(markdown);
+
+    // Convert relative image paths to GitHub raw URLs for preview
+    // This allows images to show immediately after upload without git pull
+    html = html.replace(
+      /(<img[^>]+src=")\/assets\/img\/blog\/([^"]+)(")/g,
+      function(match, prefix, filename, suffix) {
+        const githubRawUrl = `https://raw.githubusercontent.com/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/${CONFIG.GITHUB_BRANCH}/assets/img/blog/${filename}`;
+        return prefix + githubRawUrl + suffix;
+      }
+    );
 
     // Remove meta tags for safety
     const tempDiv = document.createElement('div');
@@ -400,7 +410,9 @@ async function handleImageUpload(file) {
     const shortName = file.name.length > 20
       ? file.name.substring(0, 17) + '...'
       : file.name;
-    const imagePlaceholder = `![${shortName}]()`;
+
+    // Create object URL for immediate preview (no delay!)
+    const objectUrl = URL.createObjectURL(file);
 
     // Show uploading status with short name
     const cursor = editor.codemirror.getCursor();
@@ -409,8 +421,9 @@ async function handleImageUpload(file) {
 
     // Try to upload to GitHub, fallback to base64 if it fails
     try {
-      const imageUrl = await uploadImageToGitHub(file);
-      const imageMarkdown = `![${shortName}](${imageUrl})`;
+      const imageUrls = await uploadImageToGitHub(file);
+      // Use published URL (relative path) for the markdown
+      const imageMarkdown = `![${shortName}](${imageUrls.published})`;
 
       // Replace the placeholder
       const doc = editor.codemirror.getDoc();
@@ -419,7 +432,10 @@ async function handleImageUpload(file) {
         searchCursor.replace(imageMarkdown);
       }
 
-      showStatus('이미지가 GitHub에 업로드되었습니다.', 'success');
+      // Clean up object URL
+      URL.revokeObjectURL(objectUrl);
+
+      showStatus('✅ 이미지가 GitHub에 업로드되었습니다!', 'success');
     } catch (uploadError) {
       // Fallback to base64 for small images
       console.warn('GitHub upload failed, using base64:', uploadError);
@@ -484,8 +500,15 @@ async function uploadImageToGitHub(file) {
   // Upload to GitHub
   await createOrUpdateFile(path, base64Content, `Upload blog image: ${fileName}`, true);
 
-  // Return the URL
-  return `/${path}`;
+  // Return GitHub raw URL for immediate preview (no need to wait for deployment)
+  // This allows preview to work immediately after upload
+  const githubRawUrl = `https://raw.githubusercontent.com/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/${CONFIG.GITHUB_BRANCH}/${path}`;
+
+  // Store both URLs: raw for preview, relative for published blog
+  return {
+    preview: githubRawUrl,
+    published: `/${path}`
+  };
 }
 
 // Logout
