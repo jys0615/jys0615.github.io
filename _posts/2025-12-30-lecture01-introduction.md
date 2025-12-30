@@ -1,6 +1,6 @@
 ---
 title: "Lecture.01 Introduction"
-date: "2025-12-30T07:56:06.333Z"
+date: "2025-12-30T12:02:25.908Z"
 author: "Yoonsuh Jung"
 excerpt: "컴퓨터네트워크 1장"
 tags: [""]
