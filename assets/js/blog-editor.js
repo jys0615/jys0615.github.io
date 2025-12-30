@@ -361,32 +361,63 @@ function initializeImagePaste() {
   // Listen for paste events
   wrapper.addEventListener('paste', async function(e) {
     const items = e.clipboardData.items;
-    let hasImage = false;
+    let imageFiles = [];
+    let hasTextHtml = false;
+    let textHtmlContent = '';
 
-    // Check if there's an actual image file being pasted
+    // First pass: collect all image files and check for HTML content
     for (let i = 0; i < items.length; i++) {
       if (items[i].type.indexOf('image') !== -1) {
-        e.preventDefault();
-        hasImage = true;
-
         const blob = items[i].getAsFile();
         if (blob) {
-          await handleImageUpload(blob);
+          imageFiles.push(blob);
         }
-        break;
+      } else if (items[i].type === 'text/html') {
+        hasTextHtml = true;
+        // Get HTML content to extract Notion images
+        items[i].getAsString(function(html) {
+          textHtmlContent = html;
+        });
       }
     }
 
-    // If no image was found but text contains Notion attachment URLs
-    if (!hasImage) {
+    // If we found image files, upload them
+    if (imageFiles.length > 0) {
+      e.preventDefault();
+
+      // Upload all images
+      for (const blob of imageFiles) {
+        await handleImageUpload(blob);
+      }
+
+      // After uploading, check and replace any Notion attachment URLs
       setTimeout(() => {
+        replaceNotionAttachments();
+      }, 500);
+
+      return;
+    }
+
+    // If no direct image files but we have HTML content (Notion paste)
+    if (hasTextHtml) {
+      // Wait a bit for the HTML content to be retrieved
+      setTimeout(async () => {
         const content = editor.value();
         const notionAttachmentRegex = /!\[.*?\]\(attachment:[^\)]+\)/g;
 
         if (notionAttachmentRegex.test(content)) {
-          showStatus('⚠️ 노션에서 복사한 텍스트가 감지되었습니다. 이미지를 보려면:\n1. 맥북에서 스크린샷을 찍고 (⌘+Shift+4)\n2. 에디터에 직접 붙여넣으세요 (⌘+V)', 'error');
+          // Try to extract images from HTML content
+          const imagesExtracted = await extractImagesFromHtml(textHtmlContent);
+
+          if (imagesExtracted > 0) {
+            showStatus(`✅ 노션에서 ${imagesExtracted}개의 이미지를 추출하여 업로드했습니다!`, 'success');
+            // Replace Notion attachment URLs with uploaded images
+            replaceNotionAttachments();
+          } else {
+            showStatus('⚠️ 노션에서 복사한 텍스트가 감지되었습니다. 이미지를 보려면:\n1. 맥북에서 스크린샷을 찍고 (⌘+Shift+4)\n2. 에디터에 직접 붙여넣으세요 (⌘+V)', 'error');
+          }
         }
-      }, 100);
+      }, 200);
     }
   });
 
@@ -966,4 +997,80 @@ async function handleOAuthCallback(code) {
   // This would be implemented with a backend service
   // For now, we use Personal Access Tokens
   console.log('OAuth callback received:', code);
+}
+
+// Extract images from HTML content (for Notion paste)
+let uploadedImageUrls = [];
+
+async function extractImagesFromHtml(html) {
+  if (!html) return 0;
+
+  uploadedImageUrls = []; // Reset the array
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const images = doc.querySelectorAll('img');
+
+  let extractedCount = 0;
+
+  for (const img of images) {
+    const src = img.src;
+
+    // Skip if it's already a web URL or data URL
+    if (!src || src.startsWith('http') || src.startsWith('data:')) {
+      continue;
+    }
+
+    // Try to fetch the image from Notion's blob URL or convert data URLs
+    try {
+      let blob;
+
+      if (src.startsWith('blob:')) {
+        // Fetch from blob URL
+        const response = await fetch(src);
+        blob = await response.blob();
+      } else if (src.includes('notion')) {
+        // Try to fetch from Notion URL
+        const response = await fetch(src, { mode: 'cors' });
+        blob = await response.blob();
+      } else {
+        continue;
+      }
+
+      // Upload the blob
+      const imageUrls = await uploadImageToGitHub(blob);
+      uploadedImageUrls.push(imageUrls.published);
+      extractedCount++;
+
+    } catch (error) {
+      console.warn('Failed to extract image from HTML:', error);
+    }
+  }
+
+  return extractedCount;
+}
+
+// Replace Notion attachment URLs with uploaded images
+function replaceNotionAttachments() {
+  if (!editor || uploadedImageUrls.length === 0) return;
+
+  const content = editor.value();
+  const notionAttachmentRegex = /!\[(.*?)\]\(attachment:[^\)]+\)/g;
+
+  let replacedContent = content;
+  let index = 0;
+
+  // Replace each Notion attachment with uploaded image URL
+  replacedContent = replacedContent.replace(notionAttachmentRegex, function(match, altText) {
+    if (index < uploadedImageUrls.length) {
+      const imageUrl = uploadedImageUrls[index];
+      index++;
+      return `![${altText}](${imageUrl})`;
+    }
+    return match;
+  });
+
+  if (replacedContent !== content) {
+    editor.value(replacedContent);
+    showStatus(`✅ ${index}개의 노션 이미지가 교체되었습니다!`, 'success');
+  }
 }
