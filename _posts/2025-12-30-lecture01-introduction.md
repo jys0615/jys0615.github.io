@@ -1,6 +1,6 @@
 ---
 title: "Lecture.01 Introduction"
-date: "2025-12-30T07:55:24.534Z"
+date: "2025-12-30T07:56:06.333Z"
 author: "Yoonsuh Jung"
 excerpt: "컴퓨터네트워크 1장"
 tags: [""]
@@ -28,11 +28,11 @@ Networking of SW > Networking of Devices
 
 오픈 시스템 인터 커넥트. 굉장히 추상적이나 중요. 과거, 현재, 미래건 네트워크 하는 일은 7계층으로 추상적 정의한 걸 이행한다. OSI 7계층 중 몇개층을 지원하는가? 일종의 나침반이다.     
 
-
+![image.png](attachment:9ab31198-8aba-40b3-80c5-fc84456ef522:image.png)
 
 마리아/안이 통신을 한다. 에어라는 매체로 정보를 주고받음. 
 
-
+![image.png](attachment:3461157a-e509-450b-af18-55d28318ed23:image.png)
 
 레이어 높은 쪽이 유저에 가까움. 2의 Encrypt/Decrypt로 암호화를 수행한다. 
 
@@ -41,6 +41,8 @@ Networking of SW > Networking of Devices
 마리아의 3계층을 읽을 수 있는 건 안의 3, 마찬가지로 마리아의 2는 안의 2가 읽을 수 있다. 기능적으로 마리아/안의 계층은 서로 건너편 계층과 이야기를 한다. 서로 떨어져 있지만, 같은 계층 끼리 의미 있는 행동 → Peer Layers
 
   
+
+![image.png](attachment:4202af51-3c63-48b4-b7aa-9782c3b5ab31:image.png)
 
 통신 장치를 만들던 회사가 모여서 개방형 통신 시스템을 만들었다. 이 기술을 정의한 단체가 OSI. 이 기술들은 모두 사멸한다. 7계층은 결국 살아남는다. 아래에서 위로. 사람은 상위 계층 7계층을 접한다. 
 
