@@ -4,36 +4,23 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Portfolio Details - iPortfolio Bootstrap Template</title>
+  <title>Open Patient-Ψ - Portfolio Details</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
-  <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: iPortfolio
-  * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
-  * Updated: Jun 29 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body class="portfolio-details-page">
@@ -46,8 +33,6 @@
     </div>
 
     <a href="index.html" class="logo d-flex align-items-center justify-content-center">
-      <!-- Uncomment the line below if you also wish to use an image logo -->
-      <!-- <img src="assets/img/logo.png" alt=""> -->
       <h1 class="sitename">Yoonsuh Jung</h1>
     </a>
 
@@ -68,25 +53,22 @@
         <li><a href="blog-editor.html"><i class="bi bi-gear navicon"></i> Editor</a></li>
       </ul>
     </nav>
-
   </header>
 
   <main class="main">
 
-    <!-- Page Title -->
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
         <h1 class="mb-2 mb-lg-0">Portfolio Details</h1>
         <nav class="breadcrumbs">
           <ol>
             <li><a href="index.html">Home</a></li>
-            <li class="current">Portfolio Details</li>
+            <li class="current">Open Patient-Ψ</li>
           </ol>
         </nav>
       </div>
-    </div><!-- End Page Title -->
+    </div>
 
-    <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -98,32 +80,29 @@
 
               <script type="application/json" class="swiper-config">
                 {
-                  "loop": true,
+                  "loop": false,
                   "speed": 600,
-                  "autoplay": {
-                    "delay": 5000
-                  },
                   "slidesPerView": "auto",
                   "pagination": {
                     "el": ".swiper-pagination",
                     "type": "bullets",
                     "clickable": true
+                  },
+                  "navigation": {
+                    "nextEl": ".swiper-button-next",
+                    "prevEl": ".swiper-button-prev"
                   }
                 }
               </script>
 
               <div class="swiper-wrapper align-items-center">
-
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/epic-ui.png" alt="EPiC UI">
+                  <img src="assets/img/portfolio/openpatient-pipeline.png" alt="Open Patient-Ψ Fine-tuning Pipeline">
                 </div>
-
-                <div class="swiper-slide">
-                  <img src="assets/img/portfolio/epic-arch.png" alt="EPiC System Architecture">
-                </div>
-
               </div>
               <div class="swiper-pagination"></div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
             </div>
           </div>
 
@@ -131,38 +110,45 @@
             <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
               <h3>Project information</h3>
               <ul>
-                <li><strong>Category</strong>: Team Project (6인) · 팀장</li>
-                <li><strong>Award</strong>: <strong>🏆 경희대 제1회 세모톤 최우수상</strong></li>
-                <li><strong>Period</strong>: 2025.03.19 ~ 2025.04.06</li>
-                <li><strong>GitHub</strong>: <a href="https://github.com/jys0615" target="_blank">github.com/jys0615</a></li>
-                <li><strong>Stack</strong>: Spring Boot · FastAPI · MongoDB · Redis · OpenAI API · GPT Vision · Docker · Azure · Nginx · GitHub Actions</li>
+                <li><strong>Category</strong>: Research · Team 3인</li>
+                <li><strong>Role</strong>: 데이터 구축 · QLoRA 파인튜닝 · 평가 파이프라인</li>
+                <li><strong>Period</strong>: 2025.03 ~ 2025.07 (LDI LAB 학부연구생)</li>
+                <li><strong>Publication</strong>: <strong>KCC2025 논문 게재 (제1저자)</strong></li>
+                <li><strong>Stack</strong>: Python · PyTorch · HuggingFace · QLoRA · Qwen2.5 · BERTScore · GPT-4 API</li>
               </ul>
             </div>
             <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
-              <h2>EPiC — 졸업요건 자동 진단 · AI 커리큘럼 추천</h2>
+              <h2>Open Patient-Ψ — LLM 기반 정신건강 상담 시뮬레이션</h2>
               <p>
-                경희대 소프트웨어융합대학 3개 학과(CS·AI·SWCON) 2019~2025학번 교과목 데이터를 AI가 학습,
-                <strong>PDF 성적표 업로드만으로 졸업요건을 자동 진단</strong>하고 키워드 기반 맞춤 수강 과목을 추천하는 서비스입니다.
+                EMNLP 2024 논문 PATIENT-Ψ를 오픈소스로 재현한 연구입니다.
+                GPT-4 기반 오리지널의 비용·접근성·프라이버시 한계를 극복하기 위해
+                <strong>Qwen2.5 소형 모델(0.5B/3B)에 QLoRA 파인튜닝</strong>을 적용했습니다.
               </p>
 
-              <h5 style="margin-top:1.5rem;">핵심 기여 1 — GPT Vision 자동화 파이프라인</h5>
+              <h5 style="margin-top:1.5rem;">데이터 구축</h5>
               <ul>
-                <li>정규식 파서 → GPT Vision API 기반으로 전환: 레이아웃 무관 교과목 데이터 추출</li>
-                <li>RestTemplate → WebClient 전환: 비동기 HTTP 호출로 AI 서버 위임 구조 개선</li>
-                <li>CustomException으로 Spring Boot / FastAPI 에러 응답 형식 통일</li>
+                <li>Cognitive Conceptualization Diagram(CCD) 기반 심리 구조 직접 설계</li>
+                <li>GPT-4-Turbo로 상담 시나리오 <strong>1,300개 생성 및 전량 품질 검수</strong></li>
               </ul>
 
-              <h5 style="margin-top:1rem;">핵심 기여 2 — Redis 2-Phase 캐싱</h5>
+              <h5 style="margin-top:1rem;">QLoRA 파인튜닝</h5>
               <ul>
-                <li>Phase 1: PDF 콘텐츠 MD5 해시 기반 졸업진단 결과 캐싱 (24h TTL)</li>
-                <li>Phase 2: 사용자 세션별 커리큘럼 추천 캐싱 (6h TTL) + 30분 세션 TTL 분리</li>
-                <li><strong>커리큘럼 추천 응답시간 5.8s → 0.07s (99% 단축) · Gzip 응답 페이로드 40% 감소</strong></li>
+                <li>Qwen2.5-0.5B / 3B · QLoRA rank 64 · 4-bit NF4 양자화</li>
+                <li>학습률(5종) × 에포크(5종) = <strong>25개 조합 자동 탐색</strong></li>
+                <li>최적: 0.5B → lr 4e-4, epoch 2 / 3B → lr 5e-4, epoch 6</li>
               </ul>
 
-              <h5 style="margin-top:1rem;">DevOps</h5>
+              <h5 style="margin-top:1rem;">자동 평가 파이프라인</h5>
               <ul>
-                <li>GitHub Actions CI/CD 병렬 빌드 · 레이어 캐싱 · Microsoft Azure 기반 배포</li>
-                <li>신입 2명 포함 6인 팀 온보딩 주도</li>
+                <li>BERTScore(의미 유사도) + GPT-4 Pointwise 평가 직접 구축</li>
+                <li>감정 진실성·심리 일관성·CBT 관련성 3축 자동 평가</li>
+              </ul>
+
+              <h5 style="margin-top:1rem;">결과</h5>
+              <ul>
+                <li><strong>Qwen2.5-3B: GPT-4.1-nano 근소 상회</strong> (Pointwise 평가 기준)</li>
+                <li>F1 accuracy 0.391~0.398 / Situation matching 0.22 달성</li>
+                <li><strong>KCC2025 논문 게재 (제1저자, 3인)</strong></li>
               </ul>
             </div>
           </div>
@@ -171,34 +157,22 @@
 
       </div>
 
-    </section><!-- /Portfolio Details Section -->
+    </section>
 
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-
     <div class="container">
-      <div class="copyright text-center ">
+      <div class="copyright text-center">
         <p>© <span>Copyright</span> <strong class="px-1 sitename">iPortfolio</strong> <span>All Rights Reserved</span></p>
       </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
+      <div class="credits">Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a></div>
     </div>
-
   </footer>
 
-  <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
   <div id="preloader"></div>
 
-  <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
@@ -209,8 +183,6 @@
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
 </body>

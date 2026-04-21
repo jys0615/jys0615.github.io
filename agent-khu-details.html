@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Portfolio Details - iPortfolio Bootstrap Template</title>
+  <title>Agent KHU - Portfolio Details</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -26,14 +26,6 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: iPortfolio
-  * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
-  * Updated: Jun 29 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body class="portfolio-details-page">
@@ -46,8 +38,6 @@
     </div>
 
     <a href="index.html" class="logo d-flex align-items-center justify-content-center">
-      <!-- Uncomment the line below if you also wish to use an image logo -->
-      <!-- <img src="assets/img/logo.png" alt=""> -->
       <h1 class="sitename">Yoonsuh Jung</h1>
     </a>
 
@@ -80,7 +70,7 @@
         <nav class="breadcrumbs">
           <ol>
             <li><a href="index.html">Home</a></li>
-            <li class="current">Portfolio Details</li>
+            <li class="current">Agent KHU</li>
           </ol>
         </nav>
       </div>
@@ -100,30 +90,31 @@
                 {
                   "loop": true,
                   "speed": 600,
-                  "autoplay": {
-                    "delay": 5000
-                  },
+                  "autoplay": { "delay": 5000 },
                   "slidesPerView": "auto",
                   "pagination": {
                     "el": ".swiper-pagination",
                     "type": "bullets",
                     "clickable": true
+                  },
+                  "navigation": {
+                    "nextEl": ".swiper-button-next",
+                    "prevEl": ".swiper-button-prev"
                   }
                 }
               </script>
 
               <div class="swiper-wrapper align-items-center">
-
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/epic-ui.png" alt="EPiC UI">
+                  <img src="assets/img/portfolio/agent-khu-ui.png" alt="Agent KHU UI">
                 </div>
-
                 <div class="swiper-slide">
-                  <img src="assets/img/portfolio/epic-arch.png" alt="EPiC System Architecture">
+                  <img src="assets/img/portfolio/agent-khu-arch.png" alt="Agent KHU Architecture">
                 </div>
-
               </div>
               <div class="swiper-pagination"></div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
             </div>
           </div>
 
@@ -131,38 +122,39 @@
             <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
               <h3>Project information</h3>
               <ul>
-                <li><strong>Category</strong>: Team Project (6인) · 팀장</li>
-                <li><strong>Award</strong>: <strong>🏆 경희대 제1회 세모톤 최우수상</strong></li>
-                <li><strong>Period</strong>: 2025.03.19 ~ 2025.04.06</li>
+                <li><strong>Category</strong>: Solo Project · 졸업프로젝트 A+</li>
+                <li><strong>Role</strong>: FastAPI · LLM 서버 · MCP 전체 설계·구현</li>
+                <li><strong>Period</strong>: 2025.09 ~ 2025.12 (약 4개월)</li>
                 <li><strong>GitHub</strong>: <a href="https://github.com/jys0615" target="_blank">github.com/jys0615</a></li>
-                <li><strong>Stack</strong>: Spring Boot · FastAPI · MongoDB · Redis · OpenAI API · GPT Vision · Docker · Azure · Nginx · GitHub Actions</li>
+                <li><strong>Stack</strong>: Python · FastAPI · LangChain · MCP · Redis · PostgreSQL · Elasticsearch · Docker · APScheduler · Playwright</li>
               </ul>
             </div>
             <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
-              <h2>EPiC — 졸업요건 자동 진단 · AI 커리큘럼 추천</h2>
+              <h2>Agent KHU — MCP 기반 AI 캠퍼스 정보 시스템</h2>
               <p>
-                경희대 소프트웨어융합대학 3개 학과(CS·AI·SWCON) 2019~2025학번 교과목 데이터를 AI가 학습,
-                <strong>PDF 성적표 업로드만으로 졸업요건을 자동 진단</strong>하고 키워드 기반 맞춤 수강 과목을 추천하는 서비스입니다.
+                Anthropic Claude Sonnet 4와 MCP(Model Context Protocol)를 활용해 통합 캠퍼스 정보를 제공하는 AI 에이전트 시스템.
+                졸업학점·수강신청·도서관 좌석·식당 메뉴·공지사항 등 <strong>6개 MCP 서버를 단독으로 설계·구현</strong>하고 운영까지 책임진 졸업프로젝트입니다.
               </p>
 
-              <h5 style="margin-top:1.5rem;">핵심 기여 1 — GPT Vision 자동화 파이프라인</h5>
+              <h5 style="margin-top:1.5rem;">핵심 기여 1 — I/O 병목 정량 진단 → 응답시간 67% 단축</h5>
               <ul>
-                <li>정규식 파서 → GPT Vision API 기반으로 전환: 레이아웃 무관 교과목 데이터 추출</li>
-                <li>RestTemplate → WebClient 전환: 비동기 HTTP 호출로 AI 서버 위임 구조 개선</li>
-                <li>CustomException으로 Spring Boot / FastAPI 에러 응답 형식 통일</li>
+                <li>cProfile로 전 구간 프로파일링 → 외부 스크래핑 I/O가 전체 시간의 <strong>78% 차지</strong> 특정</li>
+                <li>Redis TTL 계층화 (졸업요건·강의실 24h / 공지 2h / 식단 1h / 도서관 1m)</li>
+                <li>APScheduler 선제 갱신으로 캐시 스탬피드 방지</li>
+                <li>asyncio.gather()로 직렬 MCP 호출 → 병렬 처리 전환</li>
+                <li><strong>결과: 16.6s → 5.5s (67% 단축) · 에러율 15% → 2% · 캐시 히트율 95%</strong></li>
               </ul>
 
-              <h5 style="margin-top:1rem;">핵심 기여 2 — Redis 2-Phase 캐싱</h5>
+              <h5 style="margin-top:1rem;">핵심 기여 2 — LLM/SLM 하이브리드 라우팅</h5>
               <ul>
-                <li>Phase 1: PDF 콘텐츠 MD5 해시 기반 졸업진단 결과 캐싱 (24h TTL)</li>
-                <li>Phase 2: 사용자 세션별 커리큘럼 추천 캐싱 (6h TTL) + 30분 세션 TTL 분리</li>
-                <li><strong>커리큘럼 추천 응답시간 5.8s → 0.07s (99% 단축) · Gzip 응답 페이로드 40% 감소</strong></li>
+                <li>단순 조회형 질의 → SLM 또는 캐시 직행 / 복합 추론만 Claude Sonnet 4 실행</li>
+                <li><strong>전체 질의의 62%를 LLM 호출 없이 처리 · 단순 질의 응답속도 85% 개선</strong></li>
               </ul>
 
-              <h5 style="margin-top:1rem;">DevOps</h5>
+              <h5 style="margin-top:1rem;">핵심 기여 3 — MCP 세션 독립 재설계</h5>
               <ul>
-                <li>GitHub Actions CI/CD 병렬 빌드 · 레이어 캐싱 · Microsoft Azure 기반 배포</li>
-                <li>신입 2명 포함 6인 팀 온보딩 주도</li>
+                <li>요청마다 독립 세션(create/terminate) 생성 → Context 오염 버그 완전 제거</li>
+                <li>Graceful Degradation: 특정 MCP 장애 시 나머지 5개 기능 정상 유지</li>
               </ul>
             </div>
           </div>
@@ -176,29 +168,17 @@
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-
     <div class="container">
-      <div class="copyright text-center ">
+      <div class="copyright text-center">
         <p>© <span>Copyright</span> <strong class="px-1 sitename">iPortfolio</strong> <span>All Rights Reserved</span></p>
       </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
+      <div class="credits">Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a></div>
     </div>
-
   </footer>
 
-  <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
   <div id="preloader"></div>
 
-  <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
@@ -209,8 +189,6 @@
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
 </body>

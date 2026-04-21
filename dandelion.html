@@ -116,66 +116,54 @@
                 }
               </script>
 
-                            <div class="swiper-wrapper align-items-center">
+                            <div class=”swiper-wrapper align-items-center”>
 
-                                <div class="swiper-slide">
-                                    <img src="assets/img/portfolio/app-3.jpg" alt="">
+                                <div class=”swiper-slide”>
+                                    <img src=”assets/img/portfolio/dandelion-ui.png” alt=”민들레 UI”>
                                 </div>
 
-                                <div class="swiper-slide">
-                                    <img src="assets/img/portfolio/product-3.jpg" alt="">
-                                </div>
-
-                                <div class="swiper-slide">
-                                    <img src="assets/img/portfolio/branding-3.jpg" alt="">
-                                </div>
-
-                                <div class="swiper-slide">
-                                    <img src="assets/img/portfolio/books-3.jpg" alt="">
+                                <div class=”swiper-slide”>
+                                    <img src=”assets/img/portfolio/dandelion-arch.png” alt=”민들레 System Architecture”>
                                 </div>
 
                             </div>
-                            <div class="swiper-pagination"></div>
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-button-next"></div>
+                            <div class=”swiper-pagination”></div>
+                            <div class=”swiper-button-prev”></div>
+                            <div class=”swiper-button-next”></div>
                         </div>
                     </div>
 
-                    <div class="col-lg-4">
-                        <div class="portfolio-info" data-aos="fade-up" data-aos-delay="200">
+                    <div class=”col-lg-4”>
+                        <div class=”portfolio-info” data-aos=”fade-up” data-aos-delay=”200”>
                             <h3>Project information</h3>
                             <ul>
-                                <li><strong>Category</strong>: K-HTML Hackathon Project</li>
-                                <li><strong>Client</strong>: Dongdaemun-gu residents</li>
-                                <li><strong>Project date</strong>: 28 July 2025 ~ 30 August 2025</li>
-                                <li><strong>Project URL</strong>: <a href="https://github.com/Couque-d-Asse">https://github.com/Couque-d-Asse</a></li>
-                                <li><strong>Tech Stack</strong>:
-                                    <img src="assets/img/nextjs.png" alt="Next.js" title="Next.js" style="height: 28px; margin-right: 8px; vertical-align: middle;" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/nextdotjs';">
-                                    <img src="assets/img/java.png" alt="Java Spring" title="Java Spring" style="height: 28px; margin-right: 8px; vertical-align: middle;" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/spring';">
-                                    <img src="assets/img/python.png" alt="Python FastAPI" title="Python FastAPI" style="height: 28px; margin-right: 8px; vertical-align: middle;" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/fastapi';">
-                                    <img src="assets/img/nodejs.png" alt="Node.js" title="Node.js" style="height: 28px; margin-right: 8px; vertical-align: middle;" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/nodedotjs';">
-                                    <img src="assets/img/aws-ec2.png" alt="AWS EC2" title="AWS EC2"
-                                        style="height: 28px; margin-right: 8px; vertical-align: middle;"
-                                        onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/amazonwebservices';">
-                                </li>
+                                <li><strong>Category</strong>: K-HTML HACKATHON · Team Project</li>
+                                <li><strong>Role</strong>: 풀스택 백엔드 · 이기종 4서버 오케스트레이션</li>
+                                <li><strong>Period</strong>: 2025.07 ~ 2025.08</li>
+                                <li><strong>GitHub</strong>: <a href=”https://github.com/Couque-d-Asse” target=”_blank”>github.com/Couque-d-Asse</a></li>
+                                <li><strong>Stack</strong>: Spring Boot · FastAPI · Node.js · Next.js · LangChain · GPT SSE · Docker · PostgreSQL</li>
                             </ul>
                         </div>
-                        <div class="portfolio-description" data-aos="fade-up" data-aos-delay="300">
-                            <h2>Dandelion - Dongdaemun-gu Integrated Civil Complaint Service</h2>
+                        <div class=”portfolio-description” data-aos=”fade-up” data-aos-delay=”300”>
+                            <h2>민들레 — 동대문구 통합 민원 자동화 플랫폼</h2>
                             <p>
-                                Participated in the <strong>2025 K-HTML Hackathon</strong> and developed
-                                <strong>“Dandelion,” a unified civil complaint service for Dongdaemun-gu</strong> to address
-                                transportation and community issues.
+                                동대문구 이문뉴타운(2027년 1.3만 세대 예정) 주민의 민원을 AI가 적절한 채널
+                                (안전신문고·시장게시판·전자청원)으로 <strong>자동 분류·초안 생성</strong>하는 서비스입니다.
                             </p>
+
+                            <h5 style=”margin-top:1.5rem;”>핵심 기여 — 이기종 4서버 오케스트레이션</h5>
                             <ul>
-                                <li>Designed and built a dedicated platform to <strong>collect, analyze, and visualize resident feedback</strong>
-                                    for actionable policy planning.</li>
-                                <li>Developed a <strong>full-stack pipeline</strong> (frontend, backend, and data visualization) enabling automated
-                                    workflows from complaint submission to policy reporting.</li>
-                                <li>Implemented <strong>map-based visualization</strong> for traffic complaints and planned phased expansion to
-                                    lifestyle, safety, and convenience areas.</li>
-                                <li>Contributed to creating a <strong>data-driven, participatory platform</strong> bridging residents and local
-                                    administration, empowering better governance.</li>
+                                <li>Spring Boot(8443) · FastAPI(8000) · Node.js(3000) 묶는 오케스트레이션 API 직접 설계</li>
+                                <li><strong>상태 플래그 기반 이벤트 구조로 DB 정합성 100% 확보</strong> (Request Chaining 최적화)</li>
+                                <li>LangChain + GPT SSE 스트리밍으로 민원 초안 실시간 생성</li>
+                                <li>Node.js Data Bridge: 새울 행정 시스템·동대문구 포털 스크래핑 → 민원 데이터 수집</li>
+                            </ul>
+
+                            <h5 style=”margin-top:1rem;”>아키텍처</h5>
+                            <ul>
+                                <li>Orchestrator(Spring Boot) → AI Core(FastAPI): 민원 분류 · 법적 근거 · GPT-4o Agent</li>
+                                <li>Frontend(Next.js): Privacy Masking Processor로 개인정보 처리</li>
+                                <li>마이크로서비스 아키텍처를 처음으로 직접 설계·구현한 프로젝트</li>
                             </ul>
                         </div>
                     </div>
