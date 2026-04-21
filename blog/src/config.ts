@@ -1,0 +1,23 @@
+export const SITE = {
+  website: "https://yoonsuh.com",
+  author: "Yoonsuh Jung",
+  profile: "https://yoonsuh.com",
+  desc: "정윤서의 개발 블로그 — 백엔드와 AI를 잇는 개발자의 기록",
+  title: "Yoonsuh.dev",
+  ogImage: "astropaper-og.jpg",
+  lightAndDarkMode: true,
+  postPerIndex: 5,
+  postPerPage: 8,
+  scheduledPostMargin: 15 * 60 * 1000,
+  showArchives: true,
+  showBackButton: true,
+  editPost: {
+    enabled: false,
+    text: "Edit page",
+    url: "https://github.com/jys0615/jys0615.github.io/edit/main/blog/src/data/blog/",
+  },
+  dynamicOgImage: true,
+  dir: "ltr",
+  lang: "ko",
+  timezone: "Asia/Seoul",
+} as const;
