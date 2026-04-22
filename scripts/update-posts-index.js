@@ -75,6 +75,7 @@ const posts = files.map(filename => {
     image: frontmatter.image || '',
     tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
     category: frontmatter.category || 'Uncategorized',
+    content: body.trim(),
   };
 });
 
