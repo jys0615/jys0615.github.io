@@ -1,5 +1,55 @@
 {
   "$schema": "https://frontmatter.codes/frontmatter.schema.json",
-  "frontMatter.framework.id": "astro",
-  "frontMatter.preview.host": "http://localhost:4321"
+  "frontMatter.taxonomy.contentTypes": [
+    {
+      "name": "blog",
+      "pageBundle": false,
+      "fields": [
+        {
+          "title": "Title",
+          "name": "title",
+          "type": "string",
+          "single": true
+        },
+        {
+          "title": "Date",
+          "name": "date",
+          "type": "datetime",
+          "default": "{{now}}",
+          "isPublishDate": true
+        },
+        {
+          "title": "Author",
+          "name": "author",
+          "type": "string",
+          "default": "Yoonsuh Jung"
+        },
+        {
+          "title": "Excerpt",
+          "name": "excerpt",
+          "type": "string"
+        },
+        {
+          "title": "Tags",
+          "name": "tags",
+          "type": "tags"
+        },
+        {
+          "title": "Category",
+          "name": "category",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "frontMatter.content.pageFolders": [
+    {
+      "title": "blog",
+      "path": "[[workspace]]/_posts",
+      "contentTypes": ["blog"],
+      "defaultContentType": "blog"
+    }
+  ],
+  "frontMatter.framework.id": "other",
+  "frontMatter.site.baseURL": "https://yoonsuh.com/blog"
 }
