@@ -6,7 +6,6 @@ mkdir -p dist
 cp -r assets dist/
 cp -r data dist/
 cp -r _posts dist/
-cp -r admin dist/
 cp -r forms dist/ 2>/dev/null || true
 
 for f in *.html; do
