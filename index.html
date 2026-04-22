@@ -691,7 +691,7 @@
 
             <div class="info-wrap">
               <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
-                <i class="bi bi-geo-alt flex-shrink-0"></i>
+                <i class="bi bi-geo-alt shrink-0"></i>
                 <div>
                   <h3>Address</h3>
                   <p>A1732 Deogyeong-daero, Giheung-gu, Yongin-si, Gyeonggi-do, Republic of Korea</p>
@@ -699,7 +699,7 @@
               </div><!-- End Info Item -->
 
               <!--<div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-                <i class="bi bi-telephone flex-shrink-0"></i>
+                <i class="bi bi-telephone shrink-0"></i>
                 <div>
                   <h3>Call Us</h3>
                   <p>+1 5589 55488 55</p>
@@ -707,7 +707,7 @@
               </div> End Info Item -->
 
               <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-                <i class="bi bi-envelope flex-shrink-0"></i>
+                <i class="bi bi-envelope shrink-0"></i>
                 <div>
                   <h3>Email Me</h3>
                   <p>jys0615234@gmail.com</p>
@@ -817,43 +817,18 @@
       try {
         // Add cache-busting parameter
         const timestamp = new Date().getTime();
-        const response = await fetch(`data/posts-index.json?v=${timestamp}`);
+        const response = await fetch(`data/posts-data.json?v=${timestamp}`);
 
         if (!response.ok) {
-          throw new Error(`Failed to load posts index: ${response.status}`);
+          throw new Error(`Failed to load posts data: ${response.status}`);
         }
 
-        const postsIndex = await response.json();
+        const data = await response.json();
 
-        // Load post contents
-        const postPromises = postsIndex.posts.slice(0, 3).map(async (postFile) => {
-          try {
-            const postResponse = await fetch(`_posts/${postFile}`);
-
-            if (!postResponse.ok) {
-              console.warn(`Post file not found: ${postFile}`);
-              return null;
-            }
-
-            const postContent = await postResponse.text();
-            const { frontmatter, content } = parseFrontmatter(postContent);
-
-            return {
-              id: postFile.replace('.md', ''),
-              title: frontmatter.title || 'Untitled',
-              date: frontmatter.date || new Date().toISOString(),
-              excerpt: frontmatter.excerpt || content.substring(0, 150) + '...',
-              image: frontmatter.image || '',
-              category: frontmatter.category || 'Uncategorized',
-              tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : []
-            };
-          } catch (error) {
-            console.error(`Error loading post ${postFile}:`, error);
-            return null;
-          }
-        });
-
-        const posts = (await Promise.all(postPromises)).filter(p => p !== null);
+        // Sort by date (newest first) and take top 3
+        const posts = data.posts
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 3);
 
         // Render posts
         const container = document.getElementById('latestBlogPosts');
@@ -897,45 +872,6 @@
         const container = document.getElementById('latestBlogPosts');
         container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Unable to load blog posts at the moment.</p></div>';
       }
-    }
-
-    // Parse frontmatter from markdown
-    function parseFrontmatter(content) {
-      const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
-      const match = content.match(frontmatterRegex);
-
-      if (!match) {
-        return { frontmatter: {}, content: content };
-      }
-
-      const frontmatterText = match[1];
-      const bodyContent = match[2];
-
-      const frontmatter = {};
-      const lines = frontmatterText.split('\n');
-
-      lines.forEach(line => {
-        const colonIndex = line.indexOf(':');
-        if (colonIndex > -1) {
-          const key = line.substring(0, colonIndex).trim();
-          let value = line.substring(colonIndex + 1).trim();
-
-          // Remove quotes
-          if ((value.startsWith('"') && value.endsWith('"')) ||
-              (value.startsWith("'") && value.endsWith("'"))) {
-            value = value.slice(1, -1);
-          }
-
-          // Parse arrays (tags)
-          if (value.startsWith('[') && value.endsWith(']')) {
-            value = value.slice(1, -1).split(',').map(v => v.trim().replace(/['"]/g, ''));
-          }
-
-          frontmatter[key] = value;
-        }
-      });
-
-      return { frontmatter, content: bodyContent };
     }
 
     // Format date

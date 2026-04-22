@@ -1,0 +1,19 @@
+# Build output
+dist/
+
+# Dependencies
+node_modules/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.frontmatter/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
