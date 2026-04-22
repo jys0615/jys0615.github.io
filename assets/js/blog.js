@@ -50,50 +50,16 @@ function parseFrontmatter(content) {
 // Load all blog posts
 async function loadBlogPosts() {
   try {
-    // Add cache-busting parameter to always get the latest posts-index.json
     const timestamp = new Date().getTime();
-    const response = await fetch(`data/posts-index.json?v=${timestamp}`);
+    const response = await fetch(`data/posts-data.json?v=${timestamp}`);
 
     if (!response.ok) {
-      throw new Error(`Failed to load posts index: ${response.status}`);
+      throw new Error(`Failed to load posts data: ${response.status}`);
     }
 
-    const postsIndex = await response.json();
+    const data = await response.json();
 
-    const postPromises = postsIndex.posts.map(async (postFile) => {
-      try {
-        const postResponse = await fetch(`_posts/${postFile}?v=${timestamp}`);
-
-        if (!postResponse.ok) {
-          console.warn(`Post file not found: ${postFile} (${postResponse.status})`);
-          return null;
-        }
-
-        const postContent = await postResponse.text();
-        const { frontmatter, content } = parseFrontmatter(postContent);
-
-        // Extract filename without extension for ID
-        const id = postFile.replace('.md', '');
-
-        return {
-          id: id,
-          filename: postFile,
-          title: frontmatter.title || 'Untitled',
-          date: frontmatter.date || new Date().toISOString(),
-          author: frontmatter.author || 'Yoonsuh Jung',
-          excerpt: frontmatter.excerpt || content.substring(0, 150) + '...',
-          image: frontmatter.image || '',
-          tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
-          category: frontmatter.category || 'Uncategorized',
-          content: content
-        };
-      } catch (error) {
-        console.error(`Error loading post ${postFile}:`, error);
-        return null;
-      }
-    });
-
-    allPosts = (await Promise.all(postPromises)).filter(post => post !== null);
+    allPosts = data.posts;
 
     // Sort by date (newest first)
     allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
