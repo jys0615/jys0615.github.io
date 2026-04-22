@@ -62,7 +62,7 @@ async function loadBlogPosts() {
 
     const postPromises = postsIndex.posts.map(async (postFile) => {
       try {
-        const postResponse = await fetch(`_posts/${postFile}`);
+        const postResponse = await fetch(`_posts/${postFile}?v=${timestamp}`);
 
         if (!postResponse.ok) {
           console.warn(`Post file not found: ${postFile} (${postResponse.status})`);
