@@ -17,6 +17,7 @@ cp CNAME dist/ 2>/dev/null || true
 cp .nojekyll dist/ 2>/dev/null || true
 cp robots.txt dist/ 2>/dev/null || true
 cp sitemap.xml dist/ 2>/dev/null || true
+cp _headers dist/ 2>/dev/null || true
 
 # 2. Astro 블로그 빌드 → dist/blog/ 로 출력됨
 cd blog
