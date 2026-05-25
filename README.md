@@ -1,4 +1,4 @@
-# Yoonsuh Jung — Personal Portfolio & Blog
+# Yoonsuh Jung - Personal Portfolio & Blog
 
 > [yoonsuh.com](https://yoonsuh.com)
 
@@ -8,7 +8,7 @@ A personal portfolio and blog site built with vanilla HTML/CSS/JavaScript, hoste
 
 ## Overview
 
-This site serves as my personal space to showcase projects, share technical writing, and document my journey as a software engineering student at Kyung Hee University. I focus on LLM-based AI systems, full-stack development, and Human-Computer Interaction research.
+This site serves as my personal space to showcase projects, share technical writing, and document my journey as a Computer Science and engineering student at Kyung Hee University. I focus on LLM-based AI systems, full-stack development, and Human-Computer Interaction research.
 
 ---
 
