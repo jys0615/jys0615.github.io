@@ -14,7 +14,7 @@ This site serves as my personal space to showcase projects, share technical writ
 
 ## Features
 
-- **Portfolio** — showcases 6 projects with detailed case study pages
+- **Portfolio** — showcases 6 projects with detailed case study pages. You can find more in Github links
 - **Blog** — markdown-based writing system with category/tag filtering, search, and syntax highlighting
 - **Google Analytics 4** — traffic and engagement tracking
 - **Firebase** — real-time view counter for blog posts
