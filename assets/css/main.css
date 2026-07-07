@@ -778,6 +778,37 @@ section,
   border: 2px solid var(--accent-color);
 }
 
+.resume .resume-group {
+  background-color: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
+  border-radius: 8px;
+  padding: 20px 20px 4px 20px;
+  margin-bottom: 24px;
+}
+
+.resume .resume-group .resume-title {
+  margin-top: 0;
+}
+
+.resume .resume-group.current-group {
+  background-color: color-mix(in srgb, var(--accent-color), var(--surface-color) 92%);
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 55%);
+}
+
+.resume .badge-current {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background-color: var(--accent-color);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-left: 12px;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
 /*--------------------------------------------------------------
 # Portfolio Section
 --------------------------------------------------------------*/
