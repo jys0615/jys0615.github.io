@@ -40,16 +40,82 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "astro-blog",
+      "pageBundle": false,
+      "fields": [
+        {
+          "title": "Title",
+          "name": "title",
+          "type": "string",
+          "single": true
+        },
+        {
+          "title": "Author",
+          "name": "author",
+          "type": "string",
+          "default": "Yoonsuh Jung"
+        },
+        {
+          "title": "Publish Date",
+          "name": "pubDatetime",
+          "type": "datetime",
+          "default": "{{now}}",
+          "isPublishDate": true
+        },
+        {
+          "title": "Modified Date",
+          "name": "modDatetime",
+          "type": "datetime"
+        },
+        {
+          "title": "Slug",
+          "name": "slug",
+          "type": "slug"
+        },
+        {
+          "title": "Featured",
+          "name": "featured",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "title": "Draft",
+          "name": "draft",
+          "type": "boolean",
+          "default": false,
+          "isDraft": true
+        },
+        {
+          "title": "Tags",
+          "name": "tags",
+          "type": "tags"
+        },
+        {
+          "title": "Description",
+          "name": "description",
+          "type": "string"
+        }
+      ]
     }
   ],
   "frontMatter.content.pageFolders": [
     {
-      "title": "blog",
+      "title": "Legacy blog (_posts)",
       "path": "[[workspace]]/_posts",
       "contentTypes": ["blog"],
       "defaultContentType": "blog"
+    },
+    {
+      "title": "Astro blog (yoonsuh.com/blog)",
+      "path": "[[workspace]]/blog/src/data/blog",
+      "contentTypes": ["astro-blog"],
+      "defaultContentType": "astro-blog",
+      "previewPath": "blog/posts/{{slug}}"
     }
   ],
   "frontMatter.framework.id": "other",
-  "frontMatter.site.baseURL": "https://yoonsuh.com/blog"
+  "frontMatter.site.baseURL": "https://yoonsuh.com/blog",
+  "frontMatter.preview.host": "http://localhost:4321"
 }
