@@ -793,6 +793,23 @@ section,
 .resume .resume-group.current-group {
   background-color: color-mix(in srgb, var(--accent-color), var(--surface-color) 92%);
   border: 1px solid color-mix(in srgb, var(--accent-color), transparent 55%);
+  border-left: 4px solid var(--accent-color);
+  padding-left: 24px;
+}
+
+.resume .resume-group.current-group .resume-item {
+  border-left: none;
+  padding-left: 0;
+}
+
+.resume .resume-group.current-group .resume-item::before {
+  display: none;
+}
+
+.resume .resume-group.current-group .resume-item h4 {
+  font-size: 22px;
+  text-transform: none;
+  color: var(--heading-color);
 }
 
 .resume .badge-current {
@@ -807,6 +824,31 @@ section,
   margin-left: 12px;
   vertical-align: middle;
   text-transform: uppercase;
+}
+
+/* Option B: Summary as a plain profile block, no timeline node */
+.resume .resume-group.profile-group .resume-item {
+  border-left: none;
+  padding-left: 0;
+}
+
+.resume .resume-group.profile-group .resume-item::before {
+  display: none;
+}
+
+/* Option B: tone down secondary groups (Education / Experiences) */
+.resume .resume-group.muted-group {
+  background-color: transparent;
+  border-color: color-mix(in srgb, var(--default-color), transparent 93%);
+}
+
+.resume .resume-group.muted-group .resume-title {
+  font-size: 20px;
+  color: color-mix(in srgb, var(--heading-color), transparent 30%);
+}
+
+.resume .resume-group.muted-group .resume-item h4 {
+  color: color-mix(in srgb, var(--default-color), transparent 25%);
 }
 
 /*--------------------------------------------------------------
